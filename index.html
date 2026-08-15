@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>一束阳光 - 富文本编辑器</title>
+
+  <!-- 🌞 标签栏可爱太阳图标 (SVG Data-URI) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='24' fill='%23f59e0b'/><g stroke='%23f59e0b' stroke-width='6' stroke-linecap='round'><line x1='50' y1='10' x2='50' y2='20'/><line x1='50' y1='80' x2='50' y2='90'/><line x1='10' y1='50' x2='20' y2='50'/><line x1='80' y1='50' x2='90' y2='50'/><line x1='22' y1='22' x2='29' y2='29'/><line x1='71' y1='71' x2='78' y2='78'/><line x1='22' y1='78' x2='29' y2='71'/><line x1='71' y1='29' x2='78' y2='22'/></g><circle cx='42' cy='46' r='3.5' fill='%23ffffff'/><circle cx='58' cy='46' r='3.5' fill='%23ffffff'/><path d='M 40 56 Q 50 65 60 56' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/></svg>">
+
+  <meta name="keywords" content="一束阳光,富文本编辑器,文章排版,图文美化,新媒体编辑">
+  <meta name="description" content="一束阳光富文本编辑器，为您提供便捷流畅的文本处理、图文排版与内容编辑工作台。">
+
+  <!-- 🌐 编辑器 CDN 资源与根路径配置 -->
+  <script>
+    window.UEDITOR_HOME_URL = "https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/";
+  </script>
+  <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/ueditor.config.js"></script>
+  <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/ueditor.all.min.js"></script>
+  <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/lang/zh-cn/zh-cn.js"></script>
+
+  <style>
+    :root {
+      --primary: #f59e0b;
+      --primary-hover: #d97706;
+      --bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
+      --card-bg: rgba(255, 255, 255, 0.88);
+      --card-border: rgba(253, 230, 138, 0.9);
+      --text-main: #1f2937;
+      --text-sub: #6b7280;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      color: var(--text-main);
+      padding: 24px 16px 40px;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    /* 顶部头部 */
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 18px;
+      margin-bottom: 20px;
+      border-bottom: 1px dashed rgba(245, 158, 11, 0.35);
+    }
+
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-icon {
+      font-size: 32px;
+      background: #fef3c7;
+      border-radius: 14px;
+      padding: 6px 10px;
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.18);
+      line-height: 1;
+    }
+    .logo-title { font-size: 22px; font-weight: 700; }
+    .logo-badge { font-size: 14px; color: var(--primary); margin-left: 4px; font-weight: 600; }
+    .header-desc { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
+
+    /* 卡片式主容器 */
+    .card-panel {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 10px 30px rgba(245, 158, 11, 0.08);
+      margin-bottom: 20px;
+    }
+
+    /* 编辑器容器包裹 */
+    .editor-wrapper {
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    }
+
+    /* 按钮组 */
+    .btn-group-section {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn-group-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 16px;
+      background: rgba(254, 243, 199, 0.45);
+      border-radius: 14px;
+      border: 1px solid rgba(253, 230, 138, 0.6);
+    }
+
+    .group-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-hover);
+      min-width: 90px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 7px 14px;
+      border-radius: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--card-border);
+      background: #fff;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.15);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 3px 10px rgba(245, 158, 11, 0.25);
+    }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-danger {
+      background: #fee2e2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .btn-danger:hover {
+      background: #fecaca;
+      border-color: #f87171;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- 头部导航 -->
+    <header class="header">
+      <div class="logo-area">
+        <div class="logo-icon">☀️</div>
+        <div>
+          <div class="logo-title">一束阳光 <span class="logo-badge">富文本编辑器</span></div>
+          <div class="header-desc">纯净、高效的富文本排版与临时文章内容处理工作台</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 编辑器卡片 -->
+    <div class="card-panel">
+      <div class="editor-wrapper">
+        <script id="editor" type="text/plain" style="width:100%;height:450px;"></script>
+      </div>
+
+      <!-- 控制面板按钮群 -->
+      <div id="btns" class="btn-group-section">
+        <div class="btn-group-row">
+          <span class="group-label">📋 内容读写</span>
+          <button class="btn" onclick="getAllHtml()">获取全部 HTML</button>
+          <button class="btn" onclick="getContent()">获取内容</button>
+          <button class="btn" onclick="setContent()">写入内容</button>
+          <button class="btn" onclick="setContent(true)">追加内容</button>
+          <button class="btn" onclick="getContentTxt()">获取纯文本</button>
+          <button class="btn" onclick="getPlainTxt()">获取带格式纯文本</button>
+          <button class="btn" onclick="hasContent()">检查是否有内容</button>
+          <button class="btn" onclick="getText()">获取选中文本</button>
+          <button class="btn" onclick="insertHtml()">插入 HTML</button>
+        </div>
+
+        <div class="btn-group-row">
+          <span class="group-label">⚙️ 状态与交互</span>
+          <button class="btn" onclick="setFocus()">获得焦点</button>
+          <button class="btn" onmousedown="isFocus(event)">检查焦点状态</button>
+          <button class="btn" onmousedown="setblur(event)">使失去焦点</button>
+          <button id="enable" class="btn" onclick="setEnabled()">启用编辑</button>
+          <button class="btn" onclick="setDisabled()">禁用编辑</button>
+          <button class="btn" onclick="UE.getEditor('editor').setHide()">隐藏编辑器</button>
+          <button class="btn" onclick="UE.getEditor('editor').setShow()">显示编辑器</button>
+          <button class="btn" onclick="UE.getEditor('editor').setHeight(300)">设置高度 (300px)</button>
+        </div>
+
+        <div class="btn-group-row">
+          <span class="group-label">💾 草稿箱管理</span>
+          <button class="btn" onclick="getLocalData()">读取本地草稿</button>
+          <button class="btn btn-danger" onclick="clearLocalData()">清空本地草稿</button>
+        </div>
+
+        <div class="btn-group-row">
+          <span class="group-label">🔄 实例控制</span>
+          <button class="btn btn-primary" onclick="createEditor()">重新创建编辑器</button>
+          <button class="btn btn-danger" onclick="deleteEditor()">销毁编辑器</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    // 初始化一束阳光编辑器
+    var ue = UE.getEditor('editor', {
+      initialFrameWidth: '100%',
+      initialFrameHeight: 450,
+      autoHeightEnabled: true,
+      scaleEnabled: false
+    });
+
+    function isFocus(e) {
+      alert("当前编辑器焦点状态：" + (UE.getEditor('editor').isFocus() ? "已获得焦点" : "未获得焦点"));
+      UE.dom.domUtils.preventDefault(e);
+    }
+
+    function setblur(e) {
+      UE.getEditor('editor').blur();
+      UE.dom.domUtils.preventDefault(e);
+    }
+
+    function insertHtml() {
+      var value = prompt('请输入要插入的 HTML 代码：', '<span style="color:#f59e0b;font-weight:bold;">一束阳光</span>');
+      if (value) {
+        UE.getEditor('editor').execCommand('insertHtml', value);
+      }
+    }
+
+    function createEditor() {
+      enableBtn();
+      UE.getEditor('editor');
+    }
+
+    function getAllHtml() {
+      alert(UE.getEditor('editor').getAllHtml());
+    }
+
+    function getContent() {
+      var content = UE.getEditor('editor').getContent();
+      alert("【一束阳光编辑器内容】\n\n" + (content || "(内容为空)"));
+    }
+
+    function getPlainTxt() {
+      var plain = UE.getEditor('editor').getPlainTxt();
+      alert("【带格式纯文本】\n\n" + (plain || "(内容为空)"));
+    }
+
+    function setContent(isAppendTo) {
+      var text = isAppendTo ? "<p>一束阳光 · 阳光常在。</p>" : "<p>欢迎使用<strong>一束阳光</strong>富文本编辑器！</p>";
+      UE.getEditor('editor').setContent(text, isAppendTo);
+      alert(isAppendTo ? "已成功追加内容！" : "已成功重置并写入内容！");
+    }
+
+    function setDisabled() {
+      UE.getEditor('editor').setDisabled('fullscreen');
+      disableBtn("enable");
+    }
+
+    function setEnabled() {
+      UE.getEditor('editor').setEnabled();
+      enableBtn();
+    }
+
+    function getText() {
+      var range = UE.getEditor('editor').selection.getRange();
+      range.select();
+      var txt = UE.getEditor('editor').selection.getText();
+      alert("当前选中的纯文本：\n\n" + (txt || "（未选中任何文本）"));
+    }
+
+    function getContentTxt() {
+      var txt = UE.getEditor('editor').getContentTxt();
+      alert("纯文本内容：\n\n" + (txt || "（内容为空）"));
+    }
+
+    function hasContent() {
+      var has = UE.getEditor('editor').hasContents();
+      alert("检查结果：" + (has ? "编辑器内有内容" : "编辑器当前为空"));
+    }
+
+    function setFocus() {
+      UE.getEditor('editor').focus();
+    }
+
+    function deleteEditor() {
+      disableBtn();
+      UE.getEditor('editor').destroy();
+    }
+
+    function disableBtn(str) {
+      var div = document.getElementById('btns');
+      var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+      for (var i = 0, btn; btn = btns[i++];) {
+        if (btn.id == str) {
+          UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+        } else {
+          btn.setAttribute("disabled", "true");
+        }
+      }
+    }
+
+    function enableBtn() {
+      var div = document.getElementById('btns');
+      var btns = UE.dom.domUtils.getElementsByTagName(div, "button");
+      for (var i = 0, btn; btn = btns[i++];) {
+        UE.dom.domUtils.removeAttributes(btn, ["disabled"]);
+      }
+    }
+
+    function getLocalData() {
+      var data = UE.getEditor('editor').execCommand("getlocaldata");
+      alert("【本地草稿箱内容】\n\n" + (data || "（暂无本地草稿）"));
+    }
+
+    function clearLocalData() {
+      UE.getEditor('editor').execCommand("clearlocaldata");
+      alert("已成功清空本地草稿箱！");
+    }
+  </script>
+</body>
+</html>
