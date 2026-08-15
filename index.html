@@ -6,19 +6,19 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>一束阳光 - 富文本编辑器</title>
 
-  <!-- 🌞 标签栏可爱太阳图标 (SVG Data-URI，无需额外图片文件) -->
+  <!-- 🌞 标签栏可爱太阳图标 (SVG Data-URI) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='24' fill='%23f59e0b'/><g stroke='%23f59e0b' stroke-width='6' stroke-linecap='round'><line x1='50' y1='10' x2='50' y2='20'/><line x1='50' y1='80' x2='50' y2='90'/><line x1='10' y1='50' x2='20' y2='50'/><line x1='80' y1='50' x2='90' y2='50'/><line x1='22' y1='22' x2='29' y2='29'/><line x1='71' y1='71' x2='78' y2='78'/><line x1='22' y1='78' x2='29' y2='71'/><line x1='71' y1='29' x2='78' y2='22'/></g><circle cx='42' cy='46' r='3.5' fill='%23ffffff'/><circle cx='58' cy='46' r='3.5' fill='%23ffffff'/><path d='M 40 56 Q 50 65 60 56' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/></svg>">
 
-  <meta name="Keywords" content="一束阳光,富文本编辑器,文章排版,图文美化,公众号内容编辑,新媒体编辑">
+  <meta name="Keywords" content="一束阳光,富文本编辑器,文章排版,图文美化,新媒体编辑">
   <meta name="Description" content="一束阳光富文本编辑器，为您提供便捷流畅的文本处理、图文排版与内容编辑工作台。">
 
-  <!-- 🌐 全量 CDN 资源配置（保证开箱即用与单文件独立运行） -->
-  <script>
-    window.UEDITOR_HOME_URL = "https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/";
+  <!-- 🌐 UEditor 完整资源镜像（包含完整 themes/ 皮肤样式、图标与语言包） -->
+  <script type="text/javascript">
+    window.UEDITOR_HOME_URL = "https://cdn.jsdelivr.net/npm/vue-ueditor-wrap@3.0.7/assets/ueditor/";
   </script>
-  <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/ueditor.config.js"></script>
-  <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/ueditor.all.min.js"></script>
-  <script type="text/javascript" charset="utf-8" src="https://cdnjs.cloudflare.com/ajax/libs/ueditor/1.4.3.3/lang/zh-cn/zh-cn.js"></script>
+  <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/vue-ueditor-wrap@3.0.7/assets/ueditor/ueditor.config.js"></script>
+  <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/vue-ueditor-wrap@3.0.7/assets/ueditor/ueditor.all.js"></script>
+  <script type="text/javascript" charset="utf-8" src="https://cdn.jsdelivr.net/npm/vue-ueditor-wrap@3.0.7/assets/ueditor/lang/zh-cn/zh-cn.js"></script>
 
   <style type="text/css">
     * {
@@ -26,7 +26,7 @@
     }
     body {
       margin: 0;
-      padding: 16px 20px 40px;
+      padding: 20px 24px 40px;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
       background-color: #fff;
       color: #333;
@@ -36,18 +36,22 @@
       margin: 0 auto;
     }
     .header-area {
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .header-area h1 {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 700;
       margin: 0 0 6px 0;
-      color: #222;
+      color: #000;
     }
     .header-area p {
       margin: 0;
       font-size: 13px;
-      color: #666;
+      color: #555;
+    }
+    .editor-box {
+      width: 100%;
+      margin: 12px 0 16px 0;
     }
     .btn-row {
       margin-top: 8px;
@@ -55,18 +59,18 @@
     }
     button {
       background: #fff;
-      border: 1px solid #c9c9c9;
-      padding: 4px 9px;
-      margin: 2px 4px 2px 0;
+      border: 1px solid #ccc;
+      padding: 4px 10px;
+      margin: 2px 5px 2px 0;
       font-size: 13px;
       border-radius: 3px;
       cursor: pointer;
-      color: #222;
+      color: #111;
       outline: none;
-      transition: all 0.15s ease;
+      transition: all 0.1s ease;
     }
     button:hover {
-      background: #f2f2f2;
+      background: #f0f0f0;
       border-color: #999;
     }
     button:active {
@@ -75,7 +79,7 @@
     button:disabled {
       opacity: 0.45;
       cursor: not-allowed;
-      background: #f9f9f9;
+      background: #fafafa;
       border-color: #ddd;
     }
   </style>
@@ -85,15 +89,15 @@
   <div class="main-container">
     <div class="header-area">
       <h1>一束阳光 编辑器预览</h1>
-      <p>一束阳光富文本编辑器，给你临时处理复制粘贴文本与文章排版使用。</p>
+      <p>一束阳光富文本编辑器，给你临时处理复制黏贴文本用。</p>
     </div>
 
-    <!-- 1:1 原版 UEditor 编辑器挂载容器 -->
-    <div>
-      <script id="editor" type="text/plain" style="width:100%;height:500px;"></script>
+    <!-- 编辑器挂载节点 -->
+    <div class="editor-box">
+      <script id="editor" type="text/plain" style="width:100%;height:450px;"></script>
     </div>
 
-    <!-- 1:1 原版完整控制按钮矩阵 -->
+    <!-- 1:1 控制按钮区 -->
     <div id="btns">
       <div class="btn-row">
         <button onclick="getAllHtml()">获得整个html的内容</button>
@@ -131,10 +135,10 @@
   </div>
 
   <script type="text/javascript">
-    // 实例化一束阳光编辑器
+    // 实例化编辑器
     var ue = UE.getEditor('editor', {
       initialFrameWidth: '100%',
-      initialFrameHeight: 500,
+      initialFrameHeight: 450,
       autoHeightEnabled: true,
       elementPathEnabled: true,
       wordCount: true,
@@ -152,7 +156,7 @@
     }
 
     function insertHtml() {
-      var value = prompt('插入html代码', '<p style="color:#f59e0b;font-weight:bold;">一束阳光</p>');
+      var value = prompt('插入html代码', '<span style="color:#f59e0b;font-weight:bold;">一束阳光</span>');
       if (value !== null && value !== '') {
         UE.getEditor('editor').execCommand('insertHtml', value);
       }
