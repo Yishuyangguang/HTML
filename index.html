@@ -6,7 +6,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>一束阳光 - 文本与网页代码转换器</title>
 
-  <!-- 🌞 标签栏可爱太阳图标 (SVG Data-URI) -->
+  <!-- 🌞 标签栏发光可爱太阳图标 (SVG Data-URI) -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='24' fill='%23f59e0b'/><g stroke='%23f59e0b' stroke-width='6' stroke-linecap='round'><line x1='50' y1='10' x2='50' y2='20'/><line x1='50' y1='80' x2='50' y2='90'/><line x1='10' y1='50' x2='20' y2='50'/><line x1='80' y1='50' x2='90' y2='50'/><line x1='22' y1='22' x2='29' y2='29'/><line x1='71' y1='71' x2='78' y2='78'/><line x1='22' y1='78' x2='29' y2='71'/><line x1='71' y1='29' x2='78' y2='22'/></g><circle cx='42' cy='46' r='3.5' fill='%23ffffff'/><circle cx='58' cy='46' r='3.5' fill='%23ffffff'/><path d='M 40 56 Q 50 65 60 56' stroke='%23ffffff' stroke-width='3.5' fill='none' stroke-linecap='round'/></svg>">
 
   <style>
@@ -14,13 +14,20 @@
       --primary: #f59e0b;
       --primary-hover: #d97706;
       --bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 50%, #fde68a 100%);
-      --card-bg: rgba(255, 255, 255, 0.86);
+      --card-bg: rgba(255, 255, 255, 0.88);
       --card-border: rgba(253, 230, 138, 0.85);
       --text-main: #1f2937;
       --text-sub: #6b7280;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    /* 琥珀金极细微光滚动条 */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.25); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(245, 158, 11, 0.6); }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
       background: var(--bg-gradient);
@@ -29,9 +36,9 @@
       padding: 20px 16px 40px;
     }
 
-    .container { max-width: 1400px; margin: 0 auto; }
+    .container { max-width: 1440px; margin: 0 auto; }
 
-    /* 顶部导航 */
+    /* 顶部导航与看板 */
     .header {
       display: flex;
       flex-wrap: wrap;
@@ -56,12 +63,11 @@
     .logo-badge { font-size: 14px; color: var(--primary); margin-left: 4px; font-weight: 600; }
     .header-desc { font-size: 13px; color: var(--text-sub); margin-top: 4px; }
 
-    /* 统计看板 */
     .stats-hud {
       display: flex;
       align-items: center;
-      gap: 16px;
-      background: rgba(255, 255, 255, 0.7);
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.75);
       border: 1px solid var(--card-border);
       border-radius: 20px;
       padding: 8px 16px;
@@ -71,7 +77,7 @@
     }
     .hud-num { font-weight: 700; color: var(--primary); font-family: monospace; font-size: 14px; }
 
-    /* 工作台网格 */
+    /* 工作台布局 */
     .workspace-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -82,7 +88,6 @@
       .workspace-grid { grid-template-columns: 1fr; }
     }
 
-    /* 区域卡片 */
     .panel-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -92,15 +97,15 @@
       box-shadow: 0 6px 20px rgba(245, 158, 11, 0.06);
       display: flex;
       flex-direction: column;
-      height: 680px;
+      height: 720px;
     }
 
     .panel-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 10px;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
       border-bottom: 1px solid rgba(0,0,0,0.05);
     }
 
@@ -117,6 +122,36 @@
       align-items: center;
       gap: 6px;
       flex-wrap: wrap;
+    }
+
+    /* 快捷格式条（随手即设） */
+    .quick-format-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      background: rgba(254, 243, 199, 0.5);
+      padding: 6px 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      border: 1px solid rgba(253, 230, 138, 0.6);
+    }
+
+    .q-btn {
+      background: #fff;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #78350f;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .q-btn:hover {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      transform: translateY(-1px);
     }
 
     .btn {
@@ -150,7 +185,13 @@
     }
     .btn-primary:hover { background: var(--primary-hover); }
 
-    /* 输入框与预览区 */
+    .btn-success-anim {
+      background: #10b981 !important;
+      border-color: #10b981 !important;
+      color: #fff !important;
+    }
+
+    /* 输入区与代码区 */
     .editor-textarea {
       flex: 1;
       width: 100%;
@@ -158,9 +199,9 @@
       border-radius: 12px;
       padding: 14px;
       font-size: 14px;
-      line-height: 1.7;
+      line-height: 1.75;
       color: #1f2937;
-      background: rgba(255, 255, 255, 0.9);
+      background: rgba(255, 255, 255, 0.95);
       outline: none;
       resize: none;
       font-family: inherit;
@@ -173,16 +214,12 @@
     }
 
     .code-output {
-      font-family: "Fira Code", Consolas, Monaco, "Courier New", monospace;
-      font-size: 13px;
-      background: #1e293b;
-      color: #f8fafc;
+      font-family: "Fira Code", Consolas, Monaco, monospace;
+      font-size: 12.5px;
+      background: #0f172a;
+      color: #f1f5f9;
       border: none;
-    }
-
-    .code-output:focus {
-      border: none;
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+      line-height: 1.65;
     }
 
     /* 可视化富文本预览 */
@@ -190,35 +227,20 @@
       flex: 1;
       border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
-      padding: 16px;
+      padding: 18px 22px;
       overflow-y: auto;
       background: #ffffff;
-      line-height: 1.8;
+      line-height: 1.85;
       font-size: 15px;
-      color: #2b2b2b;
+      color: #374151;
       outline: none;
     }
 
-    .rich-preview-box:focus {
-      border-color: var(--primary);
-    }
-
-    .rich-preview-box p { margin-bottom: 14px; }
-    .rich-preview-box h2, .rich-preview-box h3 { margin: 18px 0 10px; color: #111; }
-    .rich-preview-box blockquote {
-      border-left: 4px solid var(--primary);
-      padding: 6px 14px;
-      background: #fffbeb;
-      margin: 12px 0;
-      color: #78350f;
-    }
-
-    /* 选项栏 */
     .options-bar {
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 8px 0 0;
+      padding: 10px 0 0;
       font-size: 12px;
       color: var(--text-sub);
     }
@@ -229,7 +251,7 @@
       cursor: pointer;
     }
 
-    /* 复制轻量 Toast */
+    /* 浮动 Toast 气泡 */
     .toast-msg {
       position: fixed;
       top: 24px;
@@ -252,11 +274,37 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
+
+    /* 撤销横条 */
+    .undo-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(50px);
+      background: #1f2937;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      z-index: 10000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .undo-bar.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+    .undo-btn { color: #f59e0b; font-weight: 700; cursor: pointer; text-decoration: underline; }
   </style>
 </head>
 <body>
 
   <div id="toastMsg" class="toast-msg">✓ 已复制到剪贴板</div>
+  <div id="undoBar" class="undo-bar">
+    <span>已清空全部输入内容</span>
+    <span class="undo-btn" onclick="undoClear()">点击撤销恢复</span>
+  </div>
 
   <div class="container">
     <header class="header">
@@ -264,40 +312,66 @@
         <div class="logo-icon">☀️</div>
         <div>
           <div class="logo-title">一束阳光 <span class="logo-badge">文本与网页代码转换器</span></div>
-          <div class="header-desc">纯文本智能分段排版、可视化富文本微调与网页 HTML 代码一键双向生成中枢</div>
+          <div class="header-desc">智能段落规整、步骤序号高亮、可视化微调与网页 HTML 代码一键双向生成</div>
         </div>
       </div>
 
       <div class="stats-hud">
         <span>字数：<b id="statChars" class="hud-num">0</b></span>
         <span>段落：<b id="statParas" class="hud-num">0</b></span>
-        <span>代码大小：<b id="statBytes" class="hud-num">0 B</b></span>
+        <span>阅读约：<b id="statReadTime" class="hud-num">0</b> 分钟</span>
+        <span>代码：<b id="statBytes" class="hud-num">0 B</b></span>
       </div>
     </header>
 
     <div class="workspace-grid">
-      <!-- 左侧：普通文本输入与智能排版 -->
+      <!-- 左侧：输入与快捷工具栏 -->
       <div class="panel-card">
         <div class="panel-header">
           <span class="panel-title">📝 普通文本输入区</span>
           <div class="panel-tools">
             <button class="btn" onclick="formatSmartText()">✨ 智能排版</button>
-            <button class="btn" onclick="cleanExtraSpaces()">🧹 去除多余空行</button>
+            <button class="btn" onclick="cleanExtraSpaces()">🧹 去空行</button>
             <button class="btn" onclick="addIndent()">⏩ 首行缩进</button>
             <button class="btn" onclick="clearInput()">🗑️ 清空</button>
           </div>
         </div>
 
-        <textarea id="plainTextInput" class="editor-textarea" placeholder="在此粘贴或输入普通文字、文档草稿、小说片段、演讲稿..."></textarea>
+        <!-- 随手即设快捷栏 -->
+        <div class="quick-format-bar">
+          <button class="q-btn" onclick="insertTag('# ')">📌 大标题</button>
+          <button class="q-btn" onclick="insertTag('## ')">🔖 小标题</button>
+          <button class="q-btn" onclick="insertTag('1. ')">🔢 步骤列表</button>
+          <button class="q-btn" onclick="insertTag('> ')">💬 引用</button>
+          <button class="q-btn" onclick="insertLinkPrompt()">🔗 超链接</button>
+          <button class="q-btn" onclick="wrapSelection('**', '**')">** 加粗 **</button>
+        </div>
+
+        <textarea id="plainTextInput" class="editor-textarea" placeholder="【一束阳光 · 快捷排版示范】
+
+# 主标题名称（自动识别为大标题）
+
+## 一、小标题或章节（自动识别为带金色标记的小标题）
+
+普通正文段落直接输入，按回车自然分段。
+
+1. 在启动台中找到「磁盘工具」并打开；（步骤序号自动金色加粗，正文保持舒适易读）
+2. 点击左上角「新建映像」进行操作；
+
+> 引用：这里是重点提示或注意事项内容
+
+[一束阳光网盘](https://pan.example.com)（支持直接粘贴或自定义超链接）
+**加粗重点内容**（前后加双星号快速加粗）"></textarea>
 
         <div class="options-bar">
           <label><input type="checkbox" id="optAutoTitle" checked onchange="convertTextToHtml()"> 智能识别标题与序号</label>
           <label><input type="checkbox" id="optAutoLink" checked onchange="convertTextToHtml()"> 自动转超链接</label>
-          <label><input type="checkbox" id="optIndent" onchange="convertTextToHtml()"> 输出首行缩进样式</label>
+          <label><input type="checkbox" id="optIndent" onchange="convertTextToHtml()"> 输出首行缩进</label>
+          <label><input type="checkbox" id="optSyncScroll" checked> 双屏联动滚动</label>
         </div>
       </div>
 
-      <!-- 右侧：代码输出与可视化视图（选项卡式双模式） -->
+      <!-- 右侧：输出与可视化视图 -->
       <div class="panel-card">
         <div class="panel-header">
           <div class="panel-tools" style="gap: 4px;">
@@ -306,23 +380,20 @@
           </div>
           <div class="panel-tools">
             <select id="codeModeSelect" class="btn" style="padding: 5px 8px; cursor: pointer;" onchange="convertTextToHtml()">
-              <option value="inline">✨ 公众号/内联样式 HTML</option>
-              <option value="clean">🌐 网站/纯净语义 HTML</option>
+              <option value="inline">✨ 公众号 / 内联样式 HTML</option>
+              <option value="clean">🌐 网站 / 纯净语义 HTML</option>
             </select>
-            <button class="btn btn-primary" onclick="copyResultCode()">📋 一键复制代码</button>
+            <button id="copyBtn" class="btn btn-primary" onclick="copyResultCode()">📋 一键复制代码</button>
             <button class="btn" onclick="reverseHtmlToText()">🔄 反向清洗为纯文本</button>
           </div>
         </div>
 
-        <!-- 网页代码展示区 -->
         <textarea id="htmlCodeOutput" class="editor-textarea code-output" spellcheck="false"></textarea>
-
-        <!-- 可视化富文本预览区 -->
         <div id="richPreviewBox" class="rich-preview-box" contenteditable="true" style="display: none;"></div>
 
         <div class="options-bar" style="justify-content: space-between;">
-          <span>💡 提示：在可视化预览区可直接打字编辑，代码将自动保持同步。</span>
-          <button class="btn" style="padding: 3px 8px;" onclick="loadSampleText()">载入示例文本</button>
+          <span>💡 提示：在可视化预览区可直接微调编辑，HTML 代码自动同步。</span>
+          <button class="btn" style="padding: 3px 8px;" onclick="loadSampleTutorial()">载入排版范例</button>
         </div>
       </div>
     </div>
@@ -333,11 +404,16 @@
     const htmlOutput = document.getElementById("htmlCodeOutput");
     const richPreview = document.getElementById("richPreviewBox");
     const codeMode = document.getElementById("codeModeSelect");
+    const syncScrollBox = document.getElementById("optSyncScroll");
 
     let activeTab = "html";
     let isUpdating = false;
+    let backupText = "";
+    let undoTimer = null;
 
-    // 智能转换：普通文本 -> 网页代码与富文本预览
+    const STORAGE_KEY = "SUN_TEXT_CONVERTER_CACHE";
+
+    // 智能转换：文本 -> 5 级层级网页代码
     function convertTextToHtml() {
       if (isUpdating) return;
       isUpdating = true;
@@ -347,6 +423,8 @@
       const autoLink = document.getElementById("optAutoLink").checked;
       const isIndent = document.getElementById("optIndent").checked;
       const mode = codeMode.value;
+
+      localStorage.setItem(STORAGE_KEY, rawText);
 
       if (!rawText.trim()) {
         htmlOutput.value = "";
@@ -360,40 +438,71 @@
       const outputParts = [];
       let validParagraphs = 0;
 
-      // 内联样式预设（保证邮件与公众号直接粘贴排版精致）
+      // 5 级样式阶梯定义
       const pStyle = mode === 'inline' 
-        ? ` style="margin: 0 0 16px 0; line-height: 1.8; color: #2b2b2b; font-size: 15px; ${isIndent ? 'text-indent: 2em;' : ''}"`
+        ? ` style="margin: 0 0 14px 0; line-height: 1.85; color: #374151; font-size: 15px; letter-spacing: 0.5px; ${isIndent ? 'text-indent: 2em;' : ''}"`
         : (isIndent ? ' style="text-indent: 2em;"' : '');
 
+      const h2Style = mode === 'inline'
+        ? ` style="margin: 26px 0 16px 0; font-size: 22px; font-weight: 700; color: #111827; border-bottom: 2px solid #fde68a; padding-bottom: 8px; line-height: 1.4;"`
+        : '';
+
       const h3Style = mode === 'inline'
-        ? ` style="margin: 22px 0 12px 0; font-size: 18px; font-weight: 700; color: #111827; border-left: 4px solid #f59e0b; padding-left: 10px; line-height: 1.4;"`
+        ? ` style="margin: 22px 0 12px 0; font-size: 17px; font-weight: 600; color: #1f2937; border-left: 4px solid #f59e0b; padding-left: 10px; line-height: 1.5;"`
         : '';
 
       const quoteStyle = mode === 'inline'
-        ? ` style="margin: 16px 0; padding: 10px 16px; background: #fffbeb; border-left: 4px solid #f59e0b; color: #92400e; font-size: 14px; line-height: 1.7;"`
+        ? ` style="margin: 16px 0; padding: 12px 18px; background: #fffbeb; border-left: 4px solid #f59e0b; border-radius: 0 8px 8px 0; color: #92400e; font-size: 14.5px; line-height: 1.75;"`
         : '';
+
+      const stepNumStyle = mode === 'inline'
+        ? `style="color: #d97706; font-weight: 700; margin-right: 4px;"`
+        : `style="color: #d97706; font-weight: 700;"`;
 
       lines.forEach(line => {
         let text = line.trim();
         if (!text) return;
         validParagraphs++;
 
-        // HTML 字符安全转义
         text = escapeHtml(text);
 
-        // 自动解析链接
+        // **加粗** 解析
+        text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+        // [文字](网址) 解析
+        text = text.replace(/\[(.*?)\]\((https?:\/\/[^\s\)]+)\)/g, (match, title, href) => {
+          return `<a href="${href}" target="_blank" style="color:#d97706;font-weight:600;text-decoration:underline;">${title}</a>`;
+        });
+
+        // 独立网址自动识别
         if (autoLink) {
-          text = text.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:#d97706;text-decoration:underline;">$1</a>');
+          text = text.replace(/(?<!href=")(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" style="color:#d97706;text-decoration:underline;">$1</a>');
         }
 
-        // 智能识别标题
-        if (autoTitle && /^([一二三四五六七八九十]+[、.]|\d+[、. ]|[#]{1,3}\s*|第[0-9一二三四五六七八九十]+[章节篇回])/.test(text)) {
-          const cleanTitle = text.replace(/^#+\s*/, '');
-          outputParts.push(`<h3${h3Style}>${cleanTitle}</h3>`);
-        } else if (text.startsWith("&gt;") || text.startsWith("引言：") || text.startsWith("引用：")) {
-          const quoteContent = text.replace(/^(&gt;|引言：|引用：)\s*/, '');
-          outputParts.push(`<blockquote${quoteStyle}>${quoteContent}</blockquote>`);
-        } else {
+        // 1. 大标题判定（# 或单行独立教程名）
+        if (text.startsWith("# ") || text.startsWith("标题：")) {
+          const clean = text.replace(/^(#|标题：)\s*/, '');
+          outputParts.push(`<h2${h2Style}>${clean}</h2>`);
+        }
+        // 2. 小标题判定（## 或 一、 第一章 1.1）
+        else if (autoTitle && (text.startsWith("## ") || /^([一二三四五六七八九十]+[、.]|第[0-9一二三四五六七八九十]+[章节篇回])/.test(text))) {
+          const clean = text.replace(/^##\s*/, '');
+          outputParts.push(`<h3${h3Style}>${clean}</h3>`);
+        }
+        // 3. 步骤序号判定（1. 2. 3. 或 1、 2、）—— 仅序号金色加粗，正文保持舒适字重
+        else if (/^(\d+[\.、]|\(\d+\))\s*(.+)/.test(text)) {
+          const match = text.match(/^(\d+[\.、]|\(\d+\))\s*(.+)/);
+          const numPart = match[1];
+          const contentPart = match[2];
+          outputParts.push(`<p${pStyle}><strong ${stepNumStyle}>${numPart}</strong> ${contentPart}</p>`);
+        }
+        // 4. 引用与金句
+        else if (text.startsWith("&gt;") || text.startsWith("> ") || text.startsWith("引用：") || text.startsWith("提示：")) {
+          const clean = text.replace(/^(&gt;|>|引用：|提示：)\s*/, '');
+          outputParts.push(`<blockquote${quoteStyle}>${clean}</blockquote>`);
+        }
+        // 5. 普通正文
+        else {
           outputParts.push(`<p${pStyle}>${text}</p>`);
         }
       });
@@ -406,7 +515,54 @@
       isUpdating = false;
     }
 
-    // 视图切换（代码模式 / 可视化预览模式）
+    // 快捷标签插入
+    function insertTag(prefix) {
+      const el = plainInput;
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const val = el.value;
+
+      el.value = val.substring(0, start) + prefix + val.substring(start, end) + val.substring(end);
+      el.focus();
+      el.selectionStart = el.selectionEnd = start + prefix.length;
+      convertTextToHtml();
+    }
+
+    // 快捷包裹选中内容
+    function wrapSelection(before, after) {
+      const el = plainInput;
+      const start = el.selectionStart;
+      const end = el.selectionEnd;
+      const val = el.value;
+      const sel = val.substring(start, end) || "重点内容";
+
+      el.value = val.substring(0, start) + before + sel + after + val.substring(end);
+      el.focus();
+      el.selectionStart = start + before.length;
+      el.selectionEnd = start + before.length + sel.length;
+      convertTextToHtml();
+    }
+
+    function insertLinkPrompt() {
+      const url = prompt("请输入超链接网址：", "https://");
+      if (!url) return;
+      const title = prompt("请输入链接显示文字（选填）：", "点击查看详情") || url;
+      const mdLink = `[${title}](${url})`;
+      insertTag(mdLink);
+    }
+
+    // 键盘快捷键监听
+    plainInput.addEventListener("keydown", (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "b") {
+        e.preventDefault();
+        wrapSelection("**", "**");
+      } else if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+        e.preventDefault();
+        insertLinkPrompt();
+      }
+    });
+
+    // 视图切换
     function switchView(tab) {
       activeTab = tab;
       const htmlBtn = document.getElementById("tabHtmlBtn");
@@ -425,93 +581,121 @@
       }
     }
 
-    // 可视化编辑区直接改动时的实时双向同步
+    // 双向同步：富文本修改 -> 代码同步
     richPreview.addEventListener("input", () => {
       if (isUpdating || activeTab !== "preview") return;
       isUpdating = true;
       htmlOutput.value = richPreview.innerHTML;
-      updateStats(richPreview.innerText, richPreview.querySelectorAll("p, h3, blockquote").length, new Blob([richPreview.innerHTML]).size);
+      updateStats(richPreview.innerText, richPreview.querySelectorAll("p, h2, h3, blockquote").length, new Blob([richPreview.innerHTML]).size);
       isUpdating = false;
     });
 
-    // 智能排版
+    // 双屏联动滚动
+    plainInput.addEventListener("scroll", () => {
+      if (!syncScrollBox.checked) return;
+      const pct = plainInput.scrollTop / (plainInput.scrollHeight - plainInput.clientHeight);
+      if (activeTab === "html") {
+        htmlOutput.scrollTop = pct * (htmlOutput.scrollHeight - htmlOutput.clientHeight);
+      } else {
+        richPreview.scrollTop = pct * (richPreview.scrollHeight - richPreview.clientHeight);
+      }
+    });
+
+    // 智能排版与清洗
     function formatSmartText() {
       let text = plainInput.value;
       if (!text) return;
-      // 规整中文标点与多余连续空格
       text = text.replace(/[ ]{2,}/g, ' ')
                  .replace(/([，。！？；：])\s+/g, '$1')
                  .replace(/\n{3,}/g, '\n\n');
       plainInput.value = text;
       convertTextToHtml();
-      showToast("✨ 已完成智能排版");
+      showToast("✨ 已优化排版间距与标点");
     }
 
-    // 去除空行
     function cleanExtraSpaces() {
-      const text = plainInput.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean).join("\n\n");
-      plainInput.value = text;
+      plainInput.value = plainInput.value.split(/\r?\n/).map(l => l.trim()).filter(Boolean).join("\n\n");
       convertTextToHtml();
-      showToast("🧹 已清理多余空行");
+      showToast("🧹 已剔除多余空行");
     }
 
-    // 快捷缩进
     function addIndent() {
-      const isIndentBox = document.getElementById("optIndent");
-      isIndentBox.checked = !isIndentBox.checked;
+      const box = document.getElementById("optIndent");
+      box.checked = !box.checked;
       convertTextToHtml();
-      showToast(isIndentBox.checked ? "⏩ 已开启首行缩进" : "已关闭首行缩进");
+      showToast(box.checked ? "⏩ 已开启首行缩进" : "已关闭首行缩进");
     }
 
-    // 清空输入
     function clearInput() {
       if (!plainInput.value) return;
-      if (confirm("确定要清空全部内容吗？")) {
-        plainInput.value = "";
+      backupText = plainInput.value;
+      plainInput.value = "";
+      convertTextToHtml();
+      
+      const undoBar = document.getElementById("undoBar");
+      undoBar.classList.add("show");
+      clearTimeout(undoTimer);
+      undoTimer = setTimeout(() => undoBar.classList.remove("show"), 5000);
+    }
+
+    function undoClear() {
+      if (backupText) {
+        plainInput.value = backupText;
         convertTextToHtml();
+        document.getElementById("undoBar").classList.remove("show");
+        showToast("✓ 已撤销并恢复内容");
       }
     }
 
-    // 反向清洗：HTML -> 纯文本
     function reverseHtmlToText() {
-      const currentCode = htmlOutput.value;
-      if (!currentCode.trim()) { showToast("当前没有可清洗的代码"); return; }
+      const code = htmlOutput.value;
+      if (!code.trim()) { showToast("当前无代码可清洗"); return; }
       
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = currentCode;
-      
-      const ps = tempDiv.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li, blockquote");
+      const div = document.createElement("div");
+      div.innerHTML = code;
+      const nodes = div.querySelectorAll("p, h1, h2, h3, h4, li, blockquote");
       let extracted = [];
-      
-      if (ps.length > 0) {
-        ps.forEach(node => {
-          const t = node.innerText.trim();
+
+      if (nodes.length > 0) {
+        nodes.forEach(n => {
+          const t = n.innerText.trim();
           if (t) extracted.push(t);
         });
       } else {
-        extracted = [tempDiv.innerText.trim()];
+        extracted = [div.innerText.trim()];
       }
 
       plainInput.value = extracted.join("\n\n");
       convertTextToHtml();
-      showToast("🔄 已成功反向提取纯文本");
+      showToast("🔄 已成功清洗还原为纯文本");
     }
 
-    // 复制生成的 HTML 代码
+    // 复制与动态反馈
     function copyResultCode() {
       const text = htmlOutput.value;
-      if (!text) { showToast("内容为空，无法复制"); return; }
+      if (!text) { showToast("内容为空无法复制"); return; }
+
+      const btn = document.getElementById("copyBtn");
+      const originalText = btn.innerHTML;
+
+      const doSuccess = () => {
+        btn.classList.add("btn-success-anim");
+        btn.innerHTML = "✓ 已复制成功";
+        showToast("✓ 网页代码已复制到剪贴板！");
+        setTimeout(() => {
+          btn.classList.remove("btn-success-anim");
+          btn.innerHTML = originalText;
+        }, 1500);
+      };
 
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast("✓ 网页代码已复制到剪贴板！");
-        }).catch(() => fallbackCopy(text));
+        navigator.clipboard.writeText(text).then(doSuccess).catch(() => fallbackCopy(text, doSuccess));
       } else {
-        fallbackCopy(text);
+        fallbackCopy(text, doSuccess);
       }
     }
 
-    function fallbackCopy(text) {
+    function fallbackCopy(text, cb) {
       const input = document.createElement("textarea");
       input.value = text;
       input.style.position = "fixed";
@@ -520,7 +704,7 @@
       input.select();
       try {
         document.execCommand("copy");
-        showToast("✓ 网页代码已复制到剪贴板！");
+        cb();
       } catch (err) {
         prompt("请手动复制网页代码：", text);
       }
@@ -531,18 +715,18 @@
       const toast = document.getElementById("toastMsg");
       toast.innerText = msg;
       toast.classList.add("show");
-      setTimeout(() => { toast.classList.remove("show"); }, 1800);
+      setTimeout(() => toast.classList.remove("show"), 1800);
     }
 
     function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;");
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
     function updateStats(rawText, paras, bytes) {
-      document.getElementById("statChars").innerText = rawText.replace(/\s/g, '').length;
+      const chars = rawText.replace(/\s/g, '').length;
+      document.getElementById("statChars").innerText = chars;
       document.getElementById("statParas").innerText = paras;
+      document.getElementById("statReadTime").innerText = Math.max(1, Math.ceil(chars / 350));
       document.getElementById("statBytes").innerText = formatBytes(bytes);
     }
 
@@ -553,29 +737,38 @@
       return (bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
     }
 
-    // 载入演示文本
-    function loadSampleText() {
-      plainInput.value = `一束阳光 · 晨光短叙
+    // 载入完整排版范例
+    function loadSampleTutorial() {
+      plainInput.value = `# 通过磁盘工具加密磁盘教程
 
-一、写在前面的话
-在这个快节奏的时代里，愿每一个人都能找到属于自己内心的宁静与笃定。无论身处何地，只要心中有光，便无惧漫漫长夜。
+## 一、操作准备
+在日常办公与数据归档中，对重要文件进行加密是一项良好的习惯。
 
-二、今日随笔
-今天天气格外晴朗，阳光洒在窗台的花盆上，透出温暖明亮的金色。
-整理了手边的文档与代码，发现最纯粹的排版往往带来最舒适的阅读体验。
+1. 在启动台中，找到「磁盘工具」并点击打开；
+2. 点击左上角「文件」-「新建映像」-「空白映像」；
+3. 在弹出的窗口中，设置好存储名称、位置等（例如将名称设置为 yiwokeji01）；
+4. 点击加密选项，选择「128位AES 加密（建议）」；
+5. 随即会弹出密码设置框，输入想要设定的密码并验证，然后点击「选取」；
+6. 随后点击「存储」，会立刻生成 dmg 文件及磁盘，生成后点击「完成」；
+7. 在存储的位置里打开“yiwokeji01”磁盘，将需要加密的文件放入，再右键单击磁盘并选择「推出 yiwokeji01」即可。
 
-引用：生活原本不需要太多繁琐的装饰，简单、真实、清晰，就是最好的状态。
+> 提示：当我们下次需要访问加密文件时，直接点击 **yiwokeji01.dmg**，在弹出的窗口输入密码就可以使用了。
 
-更多资讯与分享请关注官网：https://html77.pages.dev`;
+官方网盘下载地址：[一束阳光 网盘](https://pan.example.com)`;
       convertTextToHtml();
-      showToast("已载入示例文本");
+      showToast("已载入教程排版范例");
     }
 
-    // 监听实时输入
     plainInput.addEventListener("input", convertTextToHtml);
 
-    // 初始化载入
-    loadSampleText();
+    // 优先读取本地历史缓存
+    const cached = localStorage.getItem(STORAGE_KEY);
+    if (cached) {
+      plainInput.value = cached;
+      convertTextToHtml();
+    } else {
+      loadSampleTutorial();
+    }
   </script>
 </body>
 </html>
